@@ -1,13 +1,21 @@
 {
   "name": "ng-electron-scada",
   "version": "0.0.0",
+  "license": "MIT",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "build-electron": "ng build --base-href . && cp src/electron/* dist",
+    "build-electron-win": "ng build --base-href . && copy src\\electron\\* dist",
+    "electron": "npm run build-electron-win && electron dist",
+    "rebuild": "electron-rebuild -f -w sqlite3",
+    "rebuild-serialport": "electron-rebuild -f -w serialport",
+    "db": "cp ./DB/_database.sqlite ./DB/database.sqlite",
+    "db-win": "copy .\\DB\\_database.sqlite .\\DB\\database.sqlite"
   },
   "private": true,
   "dependencies": {
@@ -21,7 +29,11 @@
     "@angular/platform-browser-dynamic": "^6.1.0",
     "@angular/router": "^6.1.0",
     "core-js": "^2.5.4",
+    "knex": "^0.15.2",
+    "modbus-rtu": "^0.2.1",
     "rxjs": "^6.0.0",
+    "serialport": "^7.0.2",
+    "sqlite3": "^4.0.2",
     "zone.js": "~0.8.26"
   },
   "devDependencies": {
@@ -33,6 +45,8 @@
     "@types/jasminewd2": "~2.0.3",
     "@types/node": "~8.9.4",
     "codelyzer": "~4.2.1",
+    "electron": "^2.0.8",
+    "electron-rebuild": "^1.8.2",
     "jasmine-core": "~2.99.1",
     "jasmine-spec-reporter": "~4.2.1",
     "karma": "~1.7.1",
