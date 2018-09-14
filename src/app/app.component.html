@@ -1,3 +1,8 @@
 {{val}}
 <br>
 <button (click)="read()">Ler Modbus</button>
+<button (click)="connect()">Conectar</button>
+<br>
+<select [(ngModel)]="selectedPort">
+  <option *ngFor="let port of ports" [value]="port">{{port}}</option>
+</select>

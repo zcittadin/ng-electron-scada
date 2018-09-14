@@ -10,6 +10,7 @@ declare let electron: any;
 export class AppComponent implements OnInit {
   public title = 'TESTE';
   public ports: Array<any>;
+  public selectedPort: any;
   public ipc = electron.ipcRenderer;
   public val: any;
 
@@ -28,6 +29,10 @@ export class AppComponent implements OnInit {
       this.val = value;
       this.ref.detectChanges();
     });
+  }
+
+  connect() {
+    this.ipc.send('connectModbus', this.selectedPort);
   }
 
   read() {
