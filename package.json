@@ -14,8 +14,8 @@
     "electron": "npm run build-electron-win && electron dist",
     "rebuild": "electron-rebuild -f -w sqlite3",
     "rebuild-serialport": "electron-rebuild -f -w serialport",
-    "db": "cp ./DB/_database.sqlite ./DB/database.sqlite",
-    "db-win": "copy .\\DB\\_database.sqlite .\\DB\\database.sqlite"
+    "db": "cp ./DB/_ng-electron-scada.sqlite ./DB/ng-electron-scada.sqlite",
+    "db-win": "copy .\\DB\\_ng-electron-scada.sqlite .\\DB\\ng-electron-scada.sqlite"
   },
   "private": true,
   "dependencies": {

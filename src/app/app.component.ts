@@ -8,7 +8,6 @@ declare let electron: any;
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  public title = 'TESTE';
   public ports: Array<any>;
   public selectedPort: any;
   public ipc = electron.ipcRenderer;
@@ -19,10 +18,8 @@ export class AppComponent implements OnInit {
   ngOnInit() {
     this.ipc.send('mainWindowLoaded');
     this.ipc.on('detectedPorts', (evt, ports) => {
-      this.ports = [];
-      ports.forEach(element => {
-        this.ports.push(element.comName);
-      });
+      this.ports = ports;
+      this.selectedPort = ports[0];
       this.ref.detectChanges();
     });
     this.ipc.on('valueReceived', (evt, value) => {
@@ -32,7 +29,7 @@ export class AppComponent implements OnInit {
   }
 
   connect() {
-    this.ipc.send('connectModbus', this.selectedPort);
+    this.ipc.send('connectModbus', this.selectedPort.comName);
   }
 
   read() {

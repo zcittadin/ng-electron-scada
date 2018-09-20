@@ -3,13 +3,22 @@ const path = require('path');
 const url = require('url');
 const SerialPort = require('serialport');
 const ModbusMaster = require('modbus-rtu').ModbusMaster;
-const ModbusService = require('./modbus-service');
+const LogService = require('./log-service');
 
 let win;
 let serialport;
 let master;
 let modbusInterval;
-let modbusService = new ModbusService();
+
+let knex = require('knex')({
+  client: 'sqlite3',
+  connection: {
+    filename: path.join(__dirname, '../DB/', 'ng-electron-scada.db')
+  },
+  useNullAsDefault: true
+});
+
+const logService = new LogService(knex);
 
 function createWindow() {
   mainWindow = new BrowserWindow({ width: 1000, height: 800, show: false });
@@ -44,16 +53,40 @@ ipcMain.on('readModbus', function() {
       data => {
         // ID, start, lenght
         mainWindow.webContents.send('valueReceived', data);
+        let now = new Date();
+        let dataHorario =
+          now.getFullYear() +
+          '-' +
+          (now.getMonth() + 1) +
+          '-' +
+          now.getDate() +
+          ' ' +
+          now.getHours() +
+          ':' +
+          now.getMinutes() +
+          ':' +
+          now.getSeconds();
+        logService
+          .insertLog({
+            data_hora: dataHorario,
+            value: data[0]
+          })
+          .then(function(data) {
+            console.log(data);
+          })
+          .catch(error => {
+            console.log(error);
+          });
       },
       err => {
         console.log(err);
       }
     );
-  }, 100);
+  }, 1000);
 });
 
 ipcMain.on('mainWindowLoaded', function() {
-  modbusService.listPorts().then(ports => {
+  SerialPort.list().then(ports => {
     mainWindow.webContents.send('detectedPorts', ports);
   });
 });
