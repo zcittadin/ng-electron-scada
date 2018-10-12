@@ -29,7 +29,7 @@ function createWindow() {
       slashes: true
     })
   );
-  //mainWindow.webContents.openDevTools();
+  mainWindow.webContents.openDevTools();
   mainWindow.maximize();
   mainWindow.setMenu(null);
   mainWindow.once('ready-to-show', () => {
@@ -49,10 +49,9 @@ ipcMain.on('connectModbus', function(evt, port) {
 
 ipcMain.on('readModbus', function() {
   modbusInterval = setInterval(() => {
-    master.readHoldingRegisters(1, 0, 1).then(
+    // ID, start, lenght
+    master.readHoldingRegisters(2, 0, 1).then(
       data => {
-        // ID, start, lenght
-        mainWindow.webContents.send('valueReceived', data);
         let now = new Date();
         let dataHorario =
           now.getFullYear() +
@@ -61,28 +60,35 @@ ipcMain.on('readModbus', function() {
           '-' +
           now.getDate() +
           ' ' +
-          now.getHours() +
+          (now.getHours() < 10 ? '0' + now.getHours() : now.getHours()) +
           ':' +
           now.getMinutes() +
           ':' +
           now.getSeconds();
+        let obj = {
+          dataHorario: dataHorario,
+          valor: data[0]
+        };
+        mainWindow.webContents.send('valueReceived', obj);
         logService
           .insertLog({
             data_hora: dataHorario,
             value: data[0]
           })
-          .then(function(data) {
-            console.log(data);
-          })
-          .catch(error => {
-            console.log(error);
-          });
+          .then(
+            data => {
+              console.log(data);
+            },
+            error => {
+              console.log(error);
+            }
+          );
       },
       err => {
         console.log(err);
       }
     );
-  }, 1000);
+  }, 5000);
 });
 
 ipcMain.on('mainWindowLoaded', function() {
@@ -97,6 +103,7 @@ app.on('window-all-closed', () => {
     app.quit();
   }
 });
+
 app.on('activate', () => {
   if (mainWindow === null) {
     createWindow();

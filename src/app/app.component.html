@@ -1,11 +1,60 @@
 <div style="text-align: center">
   <h1 style="text-align: center;">{{val}}</h1>
   <br>
-  <button (click)="read()">Ler Modbus</button>
-  <button (click)="connect()">Conectar</button>
+  <button pButton (click)="read()" label="Ler Modbus" class="ui-button-rounded"></button>
+  &nbsp;
+  <button pButton (click)="connect()" label="Conectar" class="ui-button-rounded"></button>
   <br>
-
-  <select [(ngModel)]="selectedPort">
+  <br>
+  <p-dropdown [options]="ports" [(ngModel)]="selectedPort" optionLabel="comName"></p-dropdown>
+  <!--select [(ngModel)]="selectedPort">
     <option *ngFor="let port of ports" [value]="selectedPort" [selected]="ports[0]">{{port.comName}}</option>
-  </select>
+  </select-->
 </div>
+<!--div>
+  <p-table [value]="values">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>DATA</th>
+        <th>TEMPERATURA</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-v>
+      <tr>
+        <td>{{v.dataHorario}}</td>
+        <td>{{v.valor}}</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div-->
+<br>
+<br>
+
+  <div style="height: 400px; margin-top: 30px;">
+    <ngx-charts-line-chart
+          class="chart-container"
+          [scheme]="colorScheme"
+          [schemeType]="schemeType"
+          [results]="dateData"
+          [animations]="true"
+          [legend]="true"
+          [legendTitle]="legendTitle"
+          [gradient]="false"
+          [xAxis]="true"
+          [yAxis]="true"
+          [showXAxisLabel]="true"
+          [showYAxisLabel]="true"
+          [xAxisLabel]="xAxisLabel"
+          [yAxisLabel]="yAxisLabel"
+          [yScaleMin] = "yMin"
+          [yScaleMax] = "yMax"
+          [autoScale]="false"
+          [timeline]="false"
+          [showGridLines]="true"
+          [curve]="curve"
+          [rangeFillOpacity]="rangeFillOpacity"
+          [roundDomains]="false"
+          [tooltipDisabled]="false">
+        </ngx-charts-line-chart>
+  </div>
+
