@@ -41,16 +41,19 @@ function createWindow() {
 }
 
 ipcMain.on('connectModbus', function(evt, port) {
-  serialPort = new SerialPort(port, {
-    baudRate: 9600
-  });
-  master = new ModbusMaster(serialPort);
+  console.log(serialport);
+  if(serialport === undefined) {
+    serialPort = new SerialPort(port, {
+      baudRate: 9600
+    });
+    master = new ModbusMaster(serialPort);
+  }
 });
 
 ipcMain.on('readModbus', function() {
   modbusInterval = setInterval(() => {
     // ID, start, lenght
-    master.readHoldingRegisters(2, 0, 1).then(
+    master.readHoldingRegisters(1, 0, 1).then(
       data => {
         let now = new Date();
         let dataHorario =
@@ -89,6 +92,11 @@ ipcMain.on('readModbus', function() {
       }
     );
   }, 5000);
+});
+
+ipcMain.on('stopModbus', function () {
+  clearInterval(modbusInterval);
+  modbusInterval = null;
 });
 
 ipcMain.on('mainWindowLoaded', function() {

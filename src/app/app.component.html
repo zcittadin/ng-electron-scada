@@ -1,16 +1,64 @@
-<div style="text-align: center">
-  <h1 style="text-align: center;">{{val}}</h1>
-  <br>
-  <button pButton (click)="read()" label="Ler Modbus" class="ui-button-rounded"></button>
-  &nbsp;
-  <button pButton (click)="connect()" label="Conectar" class="ui-button-rounded"></button>
-  <br>
-  <br>
-  <p-dropdown [options]="ports" [(ngModel)]="selectedPort" optionLabel="comName"></p-dropdown>
-  <!--select [(ngModel)]="selectedPort">
-    <option *ngFor="let port of ports" [value]="selectedPort" [selected]="ports[0]">{{port.comName}}</option>
-  </select-->
+<p-sidebar [(visible)]="display">
+  Content
+</p-sidebar>
+<p-toolbar>
+  <div class="ui-toolbar-group-left">
+      <button class="ui-button-secondary" style="font-size: 1em" type="text" (click)="display = true" pButton icon="pi pi-bars"></button>
+      <button pButton type="button" label="New" icon="pi pi-plus"></button>
+      <button pButton type="button" label="Upload" icon="pi pi-upload" class="ui-button-success"></button>
+  </div>
+  <div class="ui-toolbar-group-right">
+      <button pButton type="button" icon="pi pi-search"></button>
+      <button pButton type="button" icon="pi pi-calendar" class="ui-button-success"></button>
+      <button pButton type="button" icon="pi pi-times" class="ui-button-danger"></button>
+  </div>
+</p-toolbar>
+<div class="ui-g">
+  <div class="ui-g-6">
+    <p-panel header="Conexão">
+        <p-dropdown [options]="ports" [(ngModel)]="selectedPort" optionLabel="comName" [style]="{'width':'150px'}"></p-dropdown>
+        &nbsp;
+        <button pButton (click)="read()" label="Ler Modbus" class="ui-button-success"></button>
+        &nbsp;
+        <h3 class="first">Conectar</h3>
+        <p-inputSwitch [(ngModel)]="checked" (click)="connect()"></p-inputSwitch>
+    </p-panel>
+  </div>
+  <div class="ui-g-6">
+    <p-panel header="Temperatura">
+      <h1 style="text-align: center; font-size: 2em">{{val}}</h1>
+    </p-panel>
+  </div>
 </div>
+<br>
+<div style="height: 400px; margin-top: 30px;">
+  <ngx-charts-line-chart
+        class="chart-container"
+        [scheme]="colorScheme"
+        [schemeType]="schemeType"
+        [results]="dateData"
+        [animations]="true"
+        [legend]="true"
+        [legendTitle]="legendTitle"
+        [gradient]="false"
+        [xAxis]="true"
+        [yAxis]="true"
+        [showXAxisLabel]="true"
+        [showYAxisLabel]="true"
+        [xAxisLabel]="xAxisLabel"
+        [yAxisLabel]="yAxisLabel"
+        [yScaleMin] = "yMin"
+        [yScaleMax] = "yMax"
+        [autoScale]="false"
+        [timeline]="false"
+        [showGridLines]="true"
+        [curve]="curve"
+        [rangeFillOpacity]="rangeFillOpacity"
+        [roundDomains]="false"
+        [tooltipDisabled]="false">
+      </ngx-charts-line-chart>
+</div>
+
 <!--div>
   <p-table [value]="values">
     <ng-template pTemplate="header">
@@ -27,34 +75,3 @@
     </ng-template>
   </p-table>
 </div-->
-<br>
-<br>
-
-  <div style="height: 400px; margin-top: 30px;">
-    <ngx-charts-line-chart
-          class="chart-container"
-          [scheme]="colorScheme"
-          [schemeType]="schemeType"
-          [results]="dateData"
-          [animations]="true"
-          [legend]="true"
-          [legendTitle]="legendTitle"
-          [gradient]="false"
-          [xAxis]="true"
-          [yAxis]="true"
-          [showXAxisLabel]="true"
-          [showYAxisLabel]="true"
-          [xAxisLabel]="xAxisLabel"
-          [yAxisLabel]="yAxisLabel"
-          [yScaleMin] = "yMin"
-          [yScaleMax] = "yMax"
-          [autoScale]="false"
-          [timeline]="false"
-          [showGridLines]="true"
-          [curve]="curve"
-          [rangeFillOpacity]="rangeFillOpacity"
-          [roundDomains]="false"
-          [tooltipDisabled]="false">
-        </ngx-charts-line-chart>
-  </div>
-

@@ -13,12 +13,12 @@ export class AppComponent implements OnInit {
   public ports: Array<any>;
   public selectedPort: any;
   public ipc = electron.ipcRenderer;
-  public val: any;
+  public val: any = 0;
 
   colorScheme: string;
   schemeType: string;
   xAxisLabel = 'Horário';
-  yAxisLabel = 'Temperatura (°C)';
+  yAxisLabel = '°C';
   yMin = 0;
   yMax = 40;
   rangeFillOpacity = 0.15;
@@ -31,8 +31,11 @@ export class AppComponent implements OnInit {
     series: []
   };
 
+  display = false;
+  checked = false;
+
   constructor(
-    private ref: ChangeDetectorRef,
+    private _ref: ChangeDetectorRef,
     private _dateFormatPipe: DateFormatPipe
   ) {}
 
@@ -46,30 +49,33 @@ export class AppComponent implements OnInit {
     this.ipc.on('detectedPorts', (evt, ports) => {
       this.ports = ports;
       this.selectedPort = ports[0];
-      this.ref.detectChanges();
+      this._ref.detectChanges();
     });
     this.ipc.on('valueReceived', (evt, value) => {
       this.val = value.valor;
-      this.plot(value.valor);
-      this.ref.detectChanges();
+      this.plot(value);
+      this._ref.detectChanges();
     });
   }
 
   connect() {
     this.ipc.send('connectModbus', this.selectedPort.comName);
+    /*if (this.checked === true) {
+      this.ipc.send('readModbus');
+    } else {
+      this.ipc.send('stopModbus');
+    }*/
   }
 
   read() {
     this.ipc.send('readModbus');
   }
 
-  plot(temp: number) {
-    console.log(temp);
-    //let dt: any;
-    //dt = this.datePipe.transform(Date.now(), 'dd/mm/yyyy');
+  plot(value: any) {
+    console.log(value);
     this.series.series.push({
-      value: temp,
-      name: this._dateFormatPipe.transform(new Date())
+      value: value.valor,
+      name: this._dateFormatPipe.transform(value.dataHorario, 'HH:mm:ss')
     });
     this.dateData = [...this.dateData];
   }
