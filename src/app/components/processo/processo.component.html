@@ -1,0 +1,49 @@
+<h4>Processo: {{processoStatusMsg}}</h4>
+<div class="ui-g">
+  <div class="ui-g-6">
+    <p-panel header="Lote de dados">
+      <div style="height: 100px; text-align: center;">
+        <input type="text" pInputText style="width:450px;" placeholder="Identificador do processo"/>
+        <br>
+        <br>
+        <button pButton (click)="read()" label="Iniciar" class="ui-button-success"></button>
+        <button pButton (click)="stopModScan()" label="Parar" class="ui-button-danger"></button>
+      </div>
+    </p-panel>
+  </div>
+  <div class="ui-g-6">
+    <p-panel header="Temperatura">
+      <div style="height: 81px;">
+        <h1 style="text-align: center; font-size: 2em;">{{val}}</h1>
+      </div>
+    </p-panel>
+  </div>
+</div>
+<br>
+<div style="height: 380px; margin-top: 15px;">
+  <ngx-charts-line-chart
+        class="chart-container"
+        [scheme]="colorScheme"
+        [schemeType]="schemeType"
+        [results]="dateData"
+        [animations]="true"
+        [legend]="true"
+        [legendTitle]="legendTitle"
+        [gradient]="false"
+        [xAxis]="true"
+        [yAxis]="true"
+        [showXAxisLabel]="true"
+        [showYAxisLabel]="true"
+        [xAxisLabel]="xAxisLabel"
+        [yAxisLabel]="yAxisLabel"
+        [yScaleMin] = "yMin"
+        [yScaleMax] = "yMax"
+        [autoScale]="false"
+        [timeline]="false"
+        [showGridLines]="true"
+        [curve]="curve"
+        [rangeFillOpacity]="rangeFillOpacity"
+        [roundDomains]="false"
+        [tooltipDisabled]="false">
+      </ngx-charts-line-chart>
+</div>

@@ -1,63 +1,41 @@
-<p-sidebar [(visible)]="display">
-  Content
+<p-sidebar [(visible)]="displaySideBar">
+  <!--p-menu [model]="items" [style]="{'width':'200px'}"></p-menu-->
+  <div style="margin-top:70px;">
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link text-primary" routerLink="processo">
+          <i class="fa fa-tachometer fa-2x fa-2x"></i>
+          Processo
+        </a>
+      </li>
+      <br>
+      <li class="nav-item">
+        <a class="nav-link text-primary" routerLink="consultas">
+          <i class="fa fa-search fa-2x"></i>
+          Consultas
+        </a>
+      </li>
+    </ul>
+  </div>
 </p-sidebar>
+<p-dialog header="Setup COM port" [(visible)]="displayComDialog">
+  <div>
+    <p-dropdown [options]="ports" [(ngModel)]="selectedPort" optionLabel="comName" [style]="{'width':'150px'}"></p-dropdown>
+    <br>
+    <br>
+    <p-inputSwitch [(ngModel)]="connected" (click)="connect()"></p-inputSwitch>
+  </div>
+</p-dialog>
 <p-toolbar>
   <div class="ui-toolbar-group-left">
-      <button class="ui-button-secondary" style="font-size: 1em" type="text" (click)="display = true" pButton icon="pi pi-bars"></button>
-      <button pButton type="button" label="New" icon="pi pi-plus"></button>
-      <button pButton type="button" label="Upload" icon="pi pi-upload" class="ui-button-success"></button>
+    <button class="ui-button-secondary" style="font-size: 1em" type="text" (click)="displaySideBar = true" pButton icon="pi pi-bars"></button>
   </div>
   <div class="ui-toolbar-group-right">
-      <button pButton type="button" icon="pi pi-search"></button>
-      <button pButton type="button" icon="pi pi-calendar" class="ui-button-success"></button>
-      <button pButton type="button" icon="pi pi-times" class="ui-button-danger"></button>
+    {{statusComMsg}}
+    <button pButton type="button" (click)="showComDialog()" icon="pi pi-cog" pTooltip="Configurações da porta serial"></button>
   </div>
 </p-toolbar>
-<div class="ui-g">
-  <div class="ui-g-6">
-    <p-panel header="Conexão">
-        <p-dropdown [options]="ports" [(ngModel)]="selectedPort" optionLabel="comName" [style]="{'width':'150px'}"></p-dropdown>
-        &nbsp;
-        <button pButton (click)="read()" label="Ler Modbus" class="ui-button-success"></button>
-        &nbsp;
-        <h3 class="first">Conectar</h3>
-        <p-inputSwitch [(ngModel)]="checked" (click)="connect()"></p-inputSwitch>
-    </p-panel>
-  </div>
-  <div class="ui-g-6">
-    <p-panel header="Temperatura">
-      <h1 style="text-align: center; font-size: 2em">{{val}}</h1>
-    </p-panel>
-  </div>
-</div>
-<br>
-<div style="height: 400px; margin-top: 30px;">
-  <ngx-charts-line-chart
-        class="chart-container"
-        [scheme]="colorScheme"
-        [schemeType]="schemeType"
-        [results]="dateData"
-        [animations]="true"
-        [legend]="true"
-        [legendTitle]="legendTitle"
-        [gradient]="false"
-        [xAxis]="true"
-        [yAxis]="true"
-        [showXAxisLabel]="true"
-        [showYAxisLabel]="true"
-        [xAxisLabel]="xAxisLabel"
-        [yAxisLabel]="yAxisLabel"
-        [yScaleMin] = "yMin"
-        [yScaleMax] = "yMax"
-        [autoScale]="false"
-        [timeline]="false"
-        [showGridLines]="true"
-        [curve]="curve"
-        [rangeFillOpacity]="rangeFillOpacity"
-        [roundDomains]="false"
-        [tooltipDisabled]="false">
-      </ngx-charts-line-chart>
-</div>
+<router-outlet></router-outlet>
 
 <!--div>
   <p-table [value]="values">
